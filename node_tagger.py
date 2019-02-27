@@ -3,6 +3,7 @@ from tkinter import *
 from PIL import Image, ImageTk
 import json
 
+
 #Checks to see if image is valid, returns True if valid
 def check_valid_image(path):
     try:
@@ -34,9 +35,9 @@ canvas_height = 700
 #create master, canvas, and entry box
 master = Tk()
 canvas = Canvas(master, width=canvas_width, height=canvas_height)
-canvas.pack()
+canvas.grid(row=0, columnspan=2)
 e = Entry(master)
-e.pack()
+e.grid(row=1, columnspan=2)
 
 #create a tags.json file if it doesn't exist
 try:
@@ -161,21 +162,28 @@ def search_tag():
 #create an image and add to canvas
 img = ImageTk.PhotoImage(resize_photo(Image.open(path + "/" + test_dir[current_photo])))
 canvas.create_image(0, 0, anchor=NW, image=img)
+
+#create frame for housing buttons
+f_buttons = Frame(master, width=350)
+
 #create buttons
-b_get_tag = Button(master, text="Get tag!", command=add_tag)
-b_del_tag = Button(master, text="Remove Tag", command=del_tag)
-b_store_tags = Button(master, text="Store Tags!", command=store_tags)
-b_next_photo = Button(master, text="Next photo", command=next_photo)
-b_prev_photo = Button(master, text="Previous photo", command=prev_photo)
-b_jump_to_photo = Button(master, text="Jump to photo", command=jump_to_photo)
-b_search_tags = Button(master, text="Search by tag", command=search_tag)
-b_get_tag.pack()
-b_del_tag.pack()
-b_store_tags.pack()
-b_next_photo.pack()
-b_prev_photo.pack()
-b_jump_to_photo.pack()
-b_search_tags.pack()
+b_get_tag = Button(f_buttons, text="Get tag!", command=add_tag)
+b_del_tag = Button(f_buttons, text="Remove Tag", command=del_tag)
+b_store_tags = Button(f_buttons, text="Store Tags!", command=store_tags)
+b_next_photo = Button(f_buttons, text="Next photo", command=next_photo)
+b_prev_photo = Button(f_buttons, text="Previous photo", command=prev_photo)
+b_jump_to_photo = Button(f_buttons, text="Jump to photo", command=jump_to_photo)
+b_search_tags = Button(f_buttons, text="Search by tag", command=search_tag)
+
+#create grid for buttons
+b_get_tag.grid(row=2, column=0, sticky=E+W)
+b_del_tag.grid(row=3, column=0, sticky=E+W)
+b_search_tags.grid(row=4, column=0, sticky=E+W)
+b_next_photo.grid(row=2, column=1, sticky=E+W)
+b_prev_photo.grid(row=3, column=1, sticky=E+W)
+b_jump_to_photo.grid(row=4, column=1, sticky=E+W)
+
+f_buttons.grid(row=2, columnspan=2)
 
 tags = tags_dict[test_dir[current_photo]]["tags"]
 print(tags)
@@ -184,3 +192,5 @@ master.mainloop()
 tags_file.close()
 tags_file = open("tags.json", "w")
 json.dump(tags_dict, tags_file, indent=4)
+print("Successfully saved files")
+input("Press Enter to close program.")
